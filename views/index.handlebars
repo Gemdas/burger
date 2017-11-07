@@ -1,0 +1,53 @@
+<img id="humor" src="/assets/img/hamburger.gif">
+<h1>EAT THY BURGER</h1>
+<div class="row">
+	<div class="col-md">
+		{{#each burger}}
+			{{#unless devoured}}
+			<div class="row">
+				<p class="col-md">{{burger_name}}</p>
+				<button data-id="{{id}}" class="devour col-md">DEVOUR IT</button>
+			</div>
+			{{/unless}}
+		{{/each}}
+	</div>
+	<div class="col-md">
+		{{#each burger}}
+			{{#if devoured}}
+			<div>
+				<p>{{burger_name}}</p>
+			</div>
+			{{/if}}
+		{{/each}}
+	</div>
+</div>
+<h2>MAKE A BURGER</h2>
+<form id="addburger">
+	<textarea type="text" name="name"></textarea>
+	<button type="submit">MAKE THY BURGER</button>
+</form>
+<script type="text/javascript">
+	$(".devour").on("click", function(event){
+		var id = $(this).data("id");
+		$.ajax("/"+id, {
+			type:"PUT"
+		}).then(
+		function(){
+			location.reload();
+		})
+	})
+	$("#addburger").on("submit", function(event){
+		event.preventDefault();
+		$("#humor").attr("src", "/assets/img/addedHotdog.gif")
+		var burger={
+			name: $("#addburger [name=name]").val().trim()
+		};
+		$.ajax("/", {
+    		type: "POST",
+    		data: burger
+    	}).then(
+    		function(){
+    			location.reload();
+    	})
+	})
+</script>
